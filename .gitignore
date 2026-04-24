@@ -1,0 +1,7 @@
+# Generated resume artifacts (per-user; never commit)
+docs/resume/
+
+# Playwright local install for the render-pdf.js helper
+node_modules/
+package.json
+package-lock.json

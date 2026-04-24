@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RTL BASE ===== */
+    html, body {
+      direction: rtl;
+      unicode-bidi: embed;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Heebo', 'Arial Hebrew', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1a1a1a;
+      background: white;
+    }
+
+    /* ===== PAGE SETUP ===== */
+    @page {
+      size: A4;
+      margin: 15mm 15mm 15mm 12mm;
+    }
+
+    /* ===== ENGLISH WORDS INSIDE HEBREW TEXT ===== */
+    /* Wrap all tech names, tools, companies in this span */
+    .en {
+      direction: ltr;
+      unicode-bidi: embed;
+      display: inline;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      text-align: right;
+      border-bottom: 2px solid {{ACCENT_COLOR}};
+      padding-bottom: 4mm;
+      margin-bottom: 5mm;
+    }
+
+    .name {
+      font-size: 20pt;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: -0.3px;
+    }
+
+    .job-title {
+      font-size: 12pt;
+      font-weight: 400;
+      color: #444;
+      margin-top: 1mm;
+    }
+
+    .contact {
+      font-size: 9.5pt;
+      color: #555;
+      margin-top: 2.5mm;
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      gap: 5mm;
+    }
+
+    .contact a { color: #555; text-decoration: none; }
+
+    /* ===== SECTIONS ===== */
+    section {
+      margin-bottom: 5mm;
+    }
+
+    h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: {{ACCENT_COLOR}};
+      border-bottom: 1px solid {{ACCENT_COLOR}};
+      padding-bottom: 1mm;
+      margin-bottom: 3mm;
+      text-align: right;
+      break-after: avoid;
+    }
+
+    /* ===== EXPERIENCE BLOCKS ===== */
+    .role {
+      margin-bottom: 4mm;
+      break-inside: avoid;
+    }
+
+    .role-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-direction: row-reverse;
+      break-after: avoid;
+    }
+
+    .role-title {
+      font-weight: 500;
+      font-size: 10.5pt;
+    }
+
+    .role-dates {
+      font-size: 9pt;
+      color: #666;
+      white-space: nowrap;
+      direction: ltr;
+    }
+
+    .company {
+      font-size: 9.5pt;
+      color: #555;
+      margin-bottom: 1.5mm;
+      text-align: right;
+    }
+
+    /* ===== BULLETS ===== */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li {
+      padding-right: 4mm;
+      position: relative;
+      margin-bottom: 1mm;
+      font-size: 10pt;
+      text-align: right;
+    }
+
+    ul li::before {
+      content: '•';
+      position: absolute;
+      right: 0;
+      color: {{ACCENT_COLOR}};
+    }
+
+    /* ===== SKILLS ===== */
+    /* Always in English — use grid not CSS columns (RTL bug) */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1mm 8mm;
+      direction: rtl;
+    }
+
+    .skill-category {
+      font-weight: 500;
+      margin-top: 2mm;
+      margin-bottom: 1mm;
+      font-size: 10pt;
+    }
+
+    .skill-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5mm;
+      flex-direction: row-reverse;
+      margin-bottom: 2mm;
+    }
+
+    .chip {
+      border: 1px solid #ccc;
+      border-radius: 3mm;
+      padding: 0.4mm 2.5mm;
+      font-size: 9pt;
+      direction: ltr; /* Skills always LTR */
+      white-space: nowrap;
+    }
+
+    /* ===== EDUCATION ===== */
+    .edu-item {
+      break-inside: avoid;
+      margin-bottom: 3mm;
+    }
+
+    .edu-degree {
+      font-weight: 500;
+    }
+
+    .edu-school {
+      color: #555;
+      font-size: 9.5pt;
+    }
+
+    /* ===== MILITARY ===== */
+    .military-item {
+      break-inside: avoid;
+      margin-bottom: 2mm;
+    }
+
+    /* ===== LANGUAGES ===== */
+    .languages {
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      gap: 4mm;
+    }
+
+    .lang-item {
+      font-size: 10pt;
+    }
+
+    .lang-level {
+      color: #666;
+      font-size: 9pt;
+    }
+
+    /* ===== PAGE BREAK CONTROL ===== */
+    h2, h3 { break-after: avoid; }
+    .role, .edu-item { break-inside: avoid; }
+    body { orphans: 3; widows: 3; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="name">{{FULL_NAME}}</div>
+  <div class="job-title">{{JOB_TITLE}}</div>
+  <div class="contact">
+    <span>{{PHONE}}</span>
+    <span><a href="mailto:{{EMAIL}}">{{EMAIL}}</a></span>
+    <span>{{CITY}}</span>
+    {{#if LINKEDIN}}<span><a href="{{LINKEDIN}}">LinkedIn</a></span>{{/if}}
+  </div>
+</header>
+
+<main>
+
+<!-- SUMMARY -->
+<section class="summary">
+  <h2>תקציר מקצועי</h2>
+  <p>{{SUMMARY}}</p>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience">
+  <h2>ניסיון מקצועי</h2>
+
+  {{#each EXPERIENCE}}
+  <div class="role">
+    <div class="role-header">
+      <span class="role-title">{{this.title}}</span>
+      <span class="role-dates">{{this.start}} – {{this.end}}</span>
+    </div>
+    <div class="company">{{this.company}} · {{this.city}}</div>
+    <ul>
+      {{#each this.bullets}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/each}}
+</section>
+
+<!-- EDUCATION -->
+<section class="education">
+  <h2>השכלה</h2>
+  {{#each EDUCATION}}
+  <div class="edu-item">
+    <div class="edu-degree">{{this.degree}} — <span class="en">{{this.field}}</span></div>
+    <div class="edu-school">{{this.institution}}, {{this.year}}</div>
+  </div>
+  {{/each}}
+</section>
+
+<!-- SKILLS (always in English) -->
+<section class="skills">
+  <h2>כישורים טכניים</h2>
+  <div class="skill-chips">
+    {{#each SKILLS}}
+    <span class="chip">{{this}}</span>
+    {{/each}}
+  </div>
+</section>
+
+<!-- MILITARY (conditional) -->
+{{#if MILITARY}}
+<section class="military">
+  <h2>שירות צבאי</h2>
+  {{#each MILITARY}}
+  <div class="military-item">
+    <strong>{{this.role}}</strong> · {{this.unit}}
+    <span style="color:#666; font-size:9pt;"> · {{this.dates}}</span>
+  </div>
+  {{/each}}
+</section>
+{{/if}}
+
+<!-- LANGUAGES -->
+<section class="languages-section">
+  <h2>שפות</h2>
+  <div class="languages">
+    {{#each LANGUAGES}}
+    <div class="lang-item">
+      {{this.name}} <span class="lang-level">({{this.level}})</span>
+    </div>
+    {{/each}}
+  </div>
+</section>
+
+</main>
+</body>
+</html>
