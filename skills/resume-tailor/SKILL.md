@@ -5,13 +5,13 @@ description: |
   Use when asked to optimize a resume, tailor CV for a job, create an ATS-friendly resume,
   generate a cover letter, or adapt career profile for a specific role.
   Triggers on: "resume", "CV", "tailor", "ATS", "job application", "cover letter",
-  "optimize resume", "adapt resume", "резюме", "вакансия".
+  "optimize resume", "adapt resume", "резюме", "вакансия", "קורות חיים", "קו"ח", "ATS ישראל".
 user-invocable: true
 ---
 
 # Resume Tailor
 
-Multi-stage skill that transforms a resume into an ATS-optimized document tailored to a specific job description. Supports EN/US and RU/CIS locales. Replaces generic AI resume services with job-specific, strategic tailoring.
+Multi-stage skill that transforms a resume into an ATS-optimized document tailored to a specific job description. Supports EN/US, RU/CIS, and HE/Israel locales. Replaces generic AI resume services with job-specific, strategic tailoring.
 
 ## Reference Files
 
@@ -19,9 +19,11 @@ Read these files at the appropriate stage — they contain rules, conventions, a
 - `references/ats-rules.md` — ATS formatting rules, keyword strategy, scoring formula, anti-patterns
 - `references/locale-en.md` — English/US resume conventions
 - `references/locale-ru.md` — Russian/CIS resume conventions
+- `references/locale-he.md` — Hebrew/Israeli resume conventions (RTL, Israeli ATS systems, Israeli market norms)
 - `references/section-templates.md` — Section templates with slot markers for both locales
-- `references/html-template-en.html` — EN HTML template for weasyprint PDF (no photo, centered header, 170px skills grid)
-- `references/html-template-ru.html` — RU HTML template for weasyprint PDF (photo, flexbox header, 135px/8.5pt skills grid)
+- `references/html-template-en.html` — EN HTML template for weasyprint PDF
+- `references/html-template-ru.html` — RU HTML template for weasyprint PDF
+- `references/html-template-he.html` — HE HTML template for weasyprint PDF (RTL, Heebo font, single-column)
 
 ## Master Profile
 
@@ -44,6 +46,7 @@ Master profile structure:
 ## Certifications
 ## Skills Inventory (comprehensive, not pre-filtered)
 ## Languages
+## Military Service (if applicable — Israeli market)
 ## Notes (gaps, side projects, consulting arrangements, etc.)
 ```
 
@@ -90,7 +93,7 @@ STAGE 4: Draft Generation (.md)
     |
 STAGE 5: Review & Iteration
     |
-STAGE 6: Final Output (.docx + optional cover letter)
+STAGE 6: Final Output (.pdf + optional cover letter)
 ```
 
 ---
@@ -141,6 +144,7 @@ The subagent must extract and return:
 - List of roles: title, company, dates, key achievements (with metrics), technologies
 - Skills inventory
 - Education and certifications
+- Military service (if present — relevant for Israeli market)
 - Career narrative arc (how roles connect)
 
 ### From Job Description
@@ -151,6 +155,7 @@ The subagent must extract and return:
 - Key responsibilities
 - Domain/industry
 - Implicit requirements (read between the lines)
+- **Language of JD** (Hebrew → likely HE locale; English → ask user)
 
 ### Gap Analysis
 - **Strong matches:** Resume skills/experience that directly map to JD requirements
@@ -163,7 +168,7 @@ The subagent must extract and return:
 
 ## STAGE 1.5: Resume Feedback
 
-**Present the analysis results to the user before asking strategic questions.** This gives the user context for their answers and surfaces issues that may need discussion.
+**Present the analysis results to the user before asking strategic questions.**
 
 ### Format
 
@@ -190,41 +195,23 @@ Present a structured feedback report:
 - [Date overlaps, unexplained gaps, title inconsistencies — only if present]
 
 ### Recommendations
-- [Concrete suggestion 1 — e.g., "Your Role X metrics (30% cost reduction) directly map to their 'cost optimization' requirement — should be prominent"]
-- [Concrete suggestion 2 — e.g., "Adjacent domain experience at Company Y is a differentiator, not a distraction — reframe as 'distributed systems in adversarial environments'"]
+- [Concrete suggestion 1]
+- [Concrete suggestion 2]
 ```
 
 ### Rules for Feedback
-- **Be specific, not generic.** "Your skills section is too broad" is useless. "CRM and Transformers are noise for this JD — cut them, add Kafka and ArgoCD which the JD requires" is actionable.
-- **Tie every observation to the JD.** Generic resume advice belongs in references/ats-rules.md, not in per-job feedback.
-- **Flag only real issues.** If dates are clean and structure is fine, don't invent problems. No filler critique.
-- **Distinguish structural issues from content issues.** Two-column layout is a structural issue (always fix). Missing a specific keyword is a content issue (fix for this JD only).
-- **Include the match/gap table.** This is the most actionable artifact — the user sees exactly what's covered and what's not.
+- **Be specific, not generic.**
+- **Tie every observation to the JD.**
+- **Flag only real issues.**
+- **Distinguish structural issues from content issues.**
+- **Include the match/gap table.**
 
 ### Excluded Roles Report
 
-After the main feedback, present a separate block listing every role and section excluded from this resume and why:
-
-```
-### Excluded from This Resume
-| Role / Section | Visibility | Reason Excluded |
-|---|---|---|
-| [Role name] | variant-specific | Variant "X" does not match target variant "Y" |
-| [Role name] | variant-specific | Variant "X" explicitly excluded by user |
-| [Role name] | on-request | Not explicitly requested |
-| [Section name] | on-request | Not explicitly requested |
-```
-
-Rules for this report:
-- List ALL excluded roles, not just some. The user must see the full picture.
-- State the exact reason: visibility value, variant mismatch, user exclusion, etc.
-- If a role is excluded because the user said "without X" — cite the user's constraint verbatim.
-- `always` roles are never listed here (they're always included).
-- `reference-only` entries are never listed here (they're metadata, not roles).
-- If the master profile has no Visibility fields, skip this report entirely.
+After the main feedback, present a separate block listing every role and section excluded from this resume and why (same format as original SKILL.md).
 
 ### After Presenting Feedback
-Say: "This is my analysis of your resume against this specific JD. Above is the list of roles I'm excluding and why. If you want to include or exclude anything differently, let me know. Now let me ask a few strategic questions before I start."
+Say: "This is my analysis of your resume against this specific JD. Now let me ask a few strategic questions before I start."
 
 Then proceed to Stage 2.
 
@@ -242,7 +229,10 @@ Ask 3-5 questions via AskUserQuestion. Adapt based on what the analysis reveals.
 Options:
   - English/US (no photo, no DOB, experience before education, 1-2 pages)
   - Russian/CIS (photo, DOB, education before experience, 2-3 pages)
+  - Hebrew/Israel — עברית (RTL, single column, Israeli ATS systems, 1-2 pages)
 ```
+
+**Note for Hebrew locale:** If the job posting was in Hebrew or the company is Israeli, proactively recommend Hebrew locale. Read `references/locale-he.md` before proceeding.
 
 **Q2: Positioning**
 ```
@@ -265,40 +255,22 @@ Options:
 
 ### Conditional Questions
 
-**Q4: Date Overlaps** (only if detected in analysis)
-```
-"I see overlapping dates: [Role A: dates] and [Role B: dates]. How should I present this?"
-Options:
-  - Concurrent roles (consulting + employment)
-  - Transition period (brief overlap during handoff)
-  - Part-time / advisory capacity
-  - [User explains]
-```
+**Q4: Date Overlaps** (only if detected)
 
 **Q5: Domain Scope** (only if resume contains domains not in JD)
-```
-"Your resume includes [domain X] experience. The JD focuses on [domain Y]. How should I handle it?"
-Options:
-  - Keep with reduced detail (shows breadth)
-  - Reframe to highlight transferable skills
-  - Minimize (focus entirely on target domain)
-```
 
 **Q6: Cover Letter**
 ```
-"Should I generate a cover letter for this application?"
-Options:
-  - Yes
-  - No, resume only
+Options: Yes / No, resume only
 ```
 
-### Assemble Tailoring Strategy
-After all questions: compile a tailoring strategy document (internal, not saved) capturing:
-- Locale choice and its implications
-- Positioning direction
-- Which roles/achievements to feature
-- How to handle gaps and overlaps
-- Cover letter decision
+**Q7: Military Service** (Hebrew locale only — if service appears in master profile)
+```
+"Your military service is in your profile. Should I include it in this CV?"
+Options:
+  - Yes, include (relevant unit/role)
+  - No, omit
+```
 
 ---
 
@@ -306,209 +278,123 @@ After all questions: compile a tailoring strategy document (internal, not saved)
 
 Read the appropriate reference files:
 - `references/ats-rules.md` (always)
-- `references/locale-en.md` OR `references/locale-ru.md` (based on Q1)
+- `references/locale-en.md` OR `references/locale-ru.md` OR `references/locale-he.md` (based on Q1)
 - `references/section-templates.md` (always)
 
+### Hebrew Locale — Additional Rules
+When HE locale is selected, apply all rules from `references/locale-he.md` plus:
+- **Single column only** — never use two-column layout
+- **Technology names always in English** — wrap in appropriate HTML/markdown if needed
+- **No niqqud** — strip any vowel marks from the text
+- **Section order:** Contact → Summary → Experience → Education → Skills → Military (if applicable) → Languages
+- **ATS keyword matching is exact** — copy keywords from JD verbatim (Israeli ATS does not do semantic matching as well as English ATS)
+
 ### 3.1 Executive Summary
-Write specifically for THIS role using the template from section-templates.md.
-- Mention the target role title (or close variant)
-- Include 1-2 headline metrics from resume that match JD priorities
-- Forward-looking statement tied to the target company/role
-- ANTI-PATTERN CHECK: Does it start with "Seasoned/Dynamic/Results-driven"? If yes, REWRITE.
+Write specifically for THIS role. For Hebrew: 3-4 lines, implicit first person (no "אני"), lead with years + domain.
 
 ### 3.2 Core Skills Section
-- Create 3-5 functional categories
-- Prioritize categories by JD relevance (most relevant first)
-- Each JD required skill must appear here
-- Remove skills irrelevant to this role (keep in master profile, not in tailored version)
-- Use pipe-delimited format within categories
+- Always in English regardless of CV language
+- Prioritize by JD relevance
 
 ### 3.3 Professional Experience
-- **Recent 2-3 roles:** Full detail using the full-detail template
-  - Company context line (what they do, size, domain)
-  - Scope statement (team size, budget, mandate)
-  - 3-5 achievement bullets with metrics using the achievement formula
-- **Older roles:** Condensed using the condensed template
-  - 1-2 most JD-relevant achievements only
-  - Do NOT eliminate entirely — condense
-- **Date overlaps:** Present as decided in Q4
-- **Metrics:** Every bullet must have a number. Tie each metric to business context.
+- Reverse chronological
+- Achievement bullets with metrics
+- Hebrew: use strong Hebrew action verbs from locale-he.md
 
 ### 3.4 Keyword Integration
-- For each JD required skill: ensure it appears in at least 2 places:
-  1. Core Skills section
-  2. An achievement bullet in Professional Experience
-- Use semantic variants (not exact repetition) across mentions
-- Cap at 3 appearances per keyword (no stuffing)
+- For Hebrew CVs: copy JD keywords exactly — spelling variations fail Israeli ATS
 
 ### 3.5 Education & Certifications
-- Check master profile — education may be omitted per user preference
-- If included: apply locale-appropriate ordering (EN: after experience; RU: before experience)
-- Certifications relevant to the role should be prominent
+- Hebrew: after experience (unlike RU convention)
 
 ### 3.6 Locale-Specific Adjustments
-- EN: Strip photo, DOB, marital status. City + state only. LinkedIn URL.
-- RU: Include photo placeholder note, DOB, full city. Languages section mandatory.
-- Length check: EN max 2 pages (~800 words), RU max 3 pages (~1200 words)
+- HE: No photo, no ID number, no DOB, city only, RTL layout, Heebo font, single column, max 2 pages
 
 ---
 
 ## STAGE 4: Draft Generation
 
-### Save Draft
 Save to: `docs/resume/draft-[company-slug]-[YYYY-MM-DD].md`
 
-The draft file contains:
-1. The full tailored resume in markdown
-2. A sentinel marker: `<!-- ATS-ANALYSIS-START -->`
-3. ATS Analysis section (for review only, stripped before final output):
-
-```markdown
-<!-- ATS-ANALYSIS-START -->
-
-## ATS Analysis (review only — not included in final document)
-
-### Estimated ATS Score: [XX]%
-
-### Keyword Coverage
-| JD Requirement | Found In | Section |
-|---|---|---|
-| [skill/requirement] | Yes/No | [where it appears] |
-
-### Scoring Breakdown
-- Required skills coverage: X/Y (Z%)
-- Nice-to-have coverage: X/Y (Z%)
-- Achievement quantification rate: Z%
-- Section completeness: Z%
-- Keyword distribution: Z%
-
-### Gaps Remaining
-- [requirement not addressed and why]
-
-### Tailoring Decisions Applied
-- Locale: [choice]
-- Positioning: [choice]
-- Emphasized: [what]
-- De-emphasized: [what]
-- Cover letter: [yes/no]
-```
-
-### Present to User
-"Here is your tailored resume draft. The ATS analysis section at the bottom shows keyword coverage and scoring — it will not appear in the final document. Please review and let me know what to adjust."
+Include ATS analysis section after sentinel marker (same format as original).
 
 ---
 
 ## STAGE 5: Review & Iteration
 
-```
-LOOP:
-  Wait for user feedback
-  IF "approved" / "looks good" / "finalize" / "done":
-    Proceed to Stage 6
-  ELSE:
-    Apply requested changes to the draft
-    Re-calculate ATS score
-    Update the draft file
-    Present updated version with changes highlighted
-```
+Same as original — loop until user approves.
 
 ---
 
 ## STAGE 6: Final Output
 
 ### 6.1 Prepare Clean Markdown
-Strip the ATS Analysis section (everything after the `<!-- ATS-ANALYSIS-START -->` marker).
+Strip the ATS Analysis section.
 
 ### 6.2 Generate PDF via HTML + weasyprint
 
-**Why not pandoc?** Pandoc with xelatex ignores CSS styling and renders photos at full page size. Pandoc with wkhtmltopdf requires a separate binary. weasyprint renders HTML+CSS faithfully — photo sizing, flexbox layout, colors, fonts all work correctly.
+Use the appropriate HTML template:
+- EN locale: `references/html-template-en.html`
+- RU locale: `references/html-template-ru.html`
+- HE locale: `references/html-template-he.html` (RTL, Heebo, single column, right-aligned)
 
-**Step 1: Create styled HTML**
-
-Save to `docs/resume/resume-[slug].html`. Use the appropriate HTML template as a starting point:
-- EN locale: `references/html-template-en.html` (centered header, no photo, 170px skills grid, 9pt skills)
-- RU locale: `references/html-template-ru.html` (flexbox header with photo, 135px skills grid, 8.5pt skills)
-
-Replace `[SLOT_MARKERS]` with actual content. Key design rules:
-- `break-inside: avoid` on `.role` and `.condensed` prevents page-split mid-role
-- RU skills: keep category labels short to prevent wrapping (e.g. "Лидерство" not "Техническое лидерство")
-- Photo: `docs/resume/photo.jpeg` (90x90px, border-radius 6px)
-
-**Step 2: Convert HTML to PDF**
+**Hebrew PDF specific:**
+- Heebo font requires internet access during render (Google Fonts CDN) — ensure Playwright/weasyprint has network access
+- Replace `{{ACCENT_COLOR}}` with a suitable color (recommend `#2563EB` for tech, `#1e3a5f` for traditional)
+- Wrap all English tech names in `<span class="en">` to prevent RTL character reordering
+- Verify: text is right-aligned, no LTR bleed on Hebrew words
 
 ```bash
 cd docs/resume && DYLD_LIBRARY_PATH="$(brew --prefix)/lib" uv run weasyprint resume-[slug].html [Name]-[TargetRole].pdf
 ```
 
-Requires `weasyprint` (already in project deps via `uv add weasyprint`).
-System deps (`glib`, `pango`, `cairo`) are installed via brew.
-`DYLD_LIBRARY_PATH` is needed on macOS for weasyprint to find gobject.
-
-**Target page counts:**
-- EN locale: 2 pages max
-- RU locale: 3 pages max
-- If 4th page has only languages section — tighten line-height, margins, font sizes until it fits
+**Target:** 1-2 pages for Hebrew CVs. If spilling to 3 pages — tighten line-height and margins first.
 
 ### 6.3 Cover Letter (if requested)
-Generate using the cover letter template from `references/section-templates.md`:
-- Save HTML: `docs/resume/cover-letter-[slug]-[date].html`
-- Locale-appropriate tone and structure
-- Convert to PDF with same weasyprint command
+Hebrew cover letter: formal tone, right-aligned, same RTL rules.
 
 ### 6.4 Report
-List all generated files:
-```
-Generated files:
-- Resume (markdown draft): docs/resume/draft-[slug]-[date].md
-- Resume (HTML source):    docs/resume/resume-[slug].html
-- Resume (PDF):            docs/resume/[Name]-[TargetRole].pdf
-- Cover letter (HTML):     docs/resume/cover-letter-[slug]-[date].html  [if applicable]
-- Cover letter (PDF):      docs/resume/cover-letter-[slug]-[date].pdf   [if applicable]
-```
+List all generated files.
 
 ### 6.5 Master Profile Update
-"Would you like me to update your master profile with any new information from this session?"
+Offer to update master profile with new information from this session.
 
 ---
 
 ## Pre-Output Verification Checklist
 
-Run this checklist before presenting the draft in Stage 4. Every item must pass.
-
 ### ATS Compliance
 - [ ] Single column layout (no markdown tables for layout)
-- [ ] Contact info in document body (not relying on header rendering)
-- [ ] Standard section headings used (per ats-rules.md)
+- [ ] Contact info in document body
+- [ ] Standard section headings used
 - [ ] Consistent date format throughout
 - [ ] No skill bars, icons, or visual ratings
 - [ ] Acronyms spelled out on first use
 
+### Hebrew-Specific (when HE locale)
+- [ ] `dir="rtl"` on `<html>` tag
+- [ ] All text right-aligned
+- [ ] No niqqud in any text
+- [ ] All technology names in English
+- [ ] No two-column layout anywhere
+- [ ] Heebo font loading correctly (not falling back to Arial)
+- [ ] No photo, no ID number, no DOB
+- [ ] Max 2 pages
+- [ ] Military section included/excluded per user's answer
+
 ### Keyword Coverage
-- [ ] Every required JD skill appears in 2+ places (skills section + experience bullet)
+- [ ] Every required JD skill appears in 2+ places
 - [ ] No keyword appears more than 3 times total
-- [ ] Job title from JD reflected in Executive Summary
-- [ ] Semantic variants used across mentions (not exact repetition)
+- [ ] Job title from JD reflected in summary
 
 ### Content Quality
-- [ ] Executive Summary is specific to THIS role (not generic/templated)
 - [ ] Every achievement bullet contains a quantified metric
-- [ ] Metrics include business context (not floating numbers)
 - [ ] Recent 2-3 roles have full detail
-- [ ] Older roles are condensed but not eliminated
-- [ ] No unexplained gaps > 6 months (flagged to user)
-- [ ] Date overlaps explained per user's direction
-- [ ] Domain breadth preserved (not over-narrowed to JD domain)
-
-### Locale Compliance
-- [ ] EN: No photo, no DOB, no marital status, experience before education
-- [ ] RU: Photo included, education per master profile preference
-- [ ] Length within locale norms (EN: ~800 words / 2 pages; RU: ~1200 words / 3 pages)
-- [ ] Tone matches locale expectations
+- [ ] Older roles condensed but not eliminated
+- [ ] No unexplained gaps > 6 months
 
 ### Anti-Pattern Check
-- [ ] Executive Summary does NOT start with "Seasoned/Dynamic/Results-driven/Passionate"
+- [ ] Summary does NOT start with generic openers
 - [ ] No "References available upon request"
 - [ ] No skill percentage/proficiency ratings
-- [ ] Early career NOT aggressively condensed to nothing
-- [ ] Adjacent domain experience NOT stripped (reframed instead if needed)
 - [ ] No responsibilities-only descriptions without achievements
