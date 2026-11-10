@@ -1,5 +1,8 @@
-# Generated resume artifacts (per-user; never commit)
-docs/resume/
+# Personal resumes, study materials, and generated artifacts (never commit)
+/docs/
+
+# Machine-local Python environment selection
+/.vscode/
 
 # Playwright local install for the render-pdf.js helper
 node_modules/

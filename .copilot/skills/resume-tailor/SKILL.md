@@ -391,6 +391,7 @@ Offer to update `docs/resume/master-profile.md` with anything new from this sess
 - [ ] Contact info in document body
 - [ ] Standard section headings used
 - [ ] Consistent date format throughout
+- [ ] Experience in strict reverse-chronological order (present first; dates descend monotonically; condensed roles sit in their correct date slot, NOT grouped after detailed roles)
 - [ ] No skill bars, icons, or visual ratings
 - [ ] Acronyms spelled out on first use
 

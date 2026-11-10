@@ -11,6 +11,30 @@
 - No special characters (★ ● ◆) — use standard bullets or dashes
 - No em dashes in dates — use hyphens
 
+### No Long Dashes Anywhere (Anti-AI Tell)
+- **NEVER use em dash (—) or en dash (–) anywhere in the resume, cover letter, or any generated text.**
+- Long dashes are a strong AI-generated-text tell and reduce credibility with human reviewers.
+- Use instead: regular hyphen `-`, comma, semicolon, colon, period, or parentheses — whichever fits the sentence.
+- This rule applies to ALL output: markdown drafts, HTML, PDF, DOCX, cover letters, and email copy.
+- Before finalizing any output, grep for `—` and `–` and replace them.
+
+### Human Writing Style (Avoid AI Tells)
+Write like a real person describing real work. Avoid the following AI-flavored patterns:
+- Triadic / "rule of three" phrasing ("scalable, robust, and maintainable")
+- Vague intensifiers ("leveraged", "spearheaded", "orchestrated", "navigated", "fostered", "delved into")
+- Empty hype words ("seamlessly", "cutting-edge", "world-class", "best-in-class", "transformative", "synergy", "holistic")
+- Sentences that begin with "Moreover,", "Furthermore,", "Additionally,", "In essence,", "It is worth noting that"
+- Over-balanced contrast ("not only X but also Y")
+- Filler closers ("ensuring success", "driving impact", "delivering value")
+- Em/en dashes (covered above) and excessive semicolons used as faux-em-dashes
+
+Do instead:
+- Short, concrete sentences. Past-tense action verb + what was done + measurable result.
+- Mix sentence lengths. A real person writes some short ones.
+- Allow small imperfections in rhythm. Don't make every bullet the same shape.
+- Specific nouns over abstract ones ("Azure OpenAI Realtime API" instead of "modern AI platforms").
+- Numbers, names, places. Real detail beats polished generality.
+
 ### Section Headings
 Use these exact standard headings (ATS systems look for them):
 - EN: "Executive Summary", "Core Skills", "Professional Experience", "Education", "Certifications"
